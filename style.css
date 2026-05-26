@@ -12,11 +12,36 @@
     font-family: 'Earwig';
 }
 
+p {
+    font-size: 32px;
+    text-shadow: 5px 5px 0 #000;
+}
+
 body {
     background-color: #f00;
 }
 
 h1 {
     font-size: 64px;
+    text-shadow: 3px 3px 0 #fff;
+    color: #000;
+}
+
+.playerdisplay {
+    font-size: 40px;
+    text-shadow: 4px 4px 0 #000;
+}
+
+.scoredisplay {
+    font-size: 55px;
     text-shadow: 5px 5px 0 #000;
+}
+
+.playerole {
+    font-size: 20px;
+}
+
+.scoreboard {
+    padding: 10px;
+    display:flex;
 }
