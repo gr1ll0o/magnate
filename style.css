@@ -1,10 +1,22 @@
+@font-face {
+    font-family: 'Earwig';
+    src: url('assets/earwig_factory.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     margin: 0 auto;
     padding: 0;
     color: #fff;
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Earwig';
 }
 
 body {
     background-color: #f00;
+}
+
+h1 {
+    font-size: 64px;
+    text-shadow: 5px 5px 0 #000;
 }
