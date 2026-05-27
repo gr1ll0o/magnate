@@ -13,64 +13,86 @@ let playersRoleDisplay = [
     document.getElementById('p4role')
 ];
 
+let roundDisplay = document.getElementById('rounddisplay');
 let nextRoundBtn = document.getElementById('nextroundbutton');
 
 /// PLAYERS STATS ///
-// Players Score
 let playersScore = [0, 0, 0, 0];
-// Players Role
-let playersRole = ['-', '-', '-', '-'];
-// Rounds
-let round = 1;
+let playersRole = ['-', '-', '-', '-']; 
+let round = 1; // Rounds
+let ruin = false; // Ruin control
 let roles = ["MAGNATE", "RICO", "POBRE", "INDIG"];
 let points = [30, 20, 10, 0];
-let nextRole = 0;
+let playedThisRound = [false, false, false, false];
+let nextRole = 0; // Next role according to roles array
 
 /// FUNCTIONS ///
 function asignPointsAndRole(p) {
+    let oldMagnate;
     switch(round) {
-        case 1: /// RONDA 1 /// Solo se comprueba si aún no se asignó el rol
-            if (playersRole[p] == '-') {              
+        case 1: /// RONDA 1 ///
+            if (!playedThisRound[p]) {              
                 playersScore[p] += points[nextRole];
                 playersRole[p] = roles[nextRole];
                 nextRole++;
                 playersScoreDisplay[p].innerHTML = playersScore[p];
                 playersRoleDisplay[p].innerHTML = playersRole[p];
+
+                playedThisRound[p] = true;
+            }
+        break;
+
+        case 2: case 3: /// RONDA 2 Y 3 ///
+            oldMagnate = playersRole.indexOf("MAGNATE");
+            if (!playedThisRound[p]) {              
+                if (playersRole[p] != "MAGNATE" && nextRole == 0) {
+                    // BANCARROTA
+                    ruin = true;
+                    playersRole[oldMagnate] = "INDIG";
+                    playersRoleDisplay[oldMagnate].innerHTML = playersRole[oldMagnate];
+                    playedThisRound[oldMagnate] = true;
+
+                    // NEW MAGNATE
+                    playersRole[p] = "MAGNATE";
+                    playersScore[p] += 30;
+                    playersRoleDisplay[p].innerHTML = playersRole[p];
+                    playersScoreDisplay[p].innerHTML = playersScore[p];
+                    playedThisRound[p] = true;
+                    nextRole = 1;
+                }else{
+                    playersRole[p] = roles[nextRole];
+                    playersScore[p] += points[nextRole];
+                    playersRoleDisplay[p].innerHTML = playersRole[p];
+                    playersScoreDisplay[p].innerHTML = playersScore[p];
+                    nextRole++;
+                }
+                playedThisRound[p] = true;
             }
         break;
     }
 }
 
 function nextRound() {
-    round++;
-    nextRole = 0;
-    nextRoundBtn.style.display = 'none';
+    if (round < 3) {
+        round++;
+        nextRole = 0;
+        ruin = false;
+        playedThisRound = [false, false, false, false];
+        roundDisplay.innerHTML = "RONDA " + round + "/3";
+        nextRoundBtn.style.display = 'none';
+    }else{
+        roundDisplay.innerHTML = "PARTIDA TERMINADA!";
+    }
 }
 
 /// SCRIPT ///
-
-nextRoundBtn.style.display = 'none';
-
-playersScoreDisplay[0].addEventListener('click', () => {
-    asignPointsAndRole(0);
-    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
-});
-
-playersScoreDisplay[1].addEventListener('click', () => {
-    asignPointsAndRole(1);
-    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
-
-});
-
-playersScoreDisplay[2].addEventListener('click', () => {
-    asignPointsAndRole(2);
-    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
-
-});
-
-playersScoreDisplay[3].addEventListener('click', () => {
-    asignPointsAndRole(3);
-    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
+playersScoreDisplay.forEach((player, i) => {
+    player.addEventListener('click', () => {
+        asignPointsAndRole(i);
+        if ((nextRole >= 3 && ruin) || (nextRole >= 4 && !ruin)) {
+            nextRoundBtn.style.display = 'block';
+        }
+    });
 });
 
 nextRoundBtn.addEventListener('click', () => {

@@ -48,5 +48,6 @@ h1 {
 }
 
 #nextroundbutton {
+    display: none;
     cursor: pointer;
 }
