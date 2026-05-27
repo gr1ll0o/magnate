@@ -1,4 +1,11 @@
 /// HTML ELEMENTS ///
+let playersBoxDisplay = [
+    document.getElementById('p1box'),
+    document.getElementById('p2box'),
+    document.getElementById('p3box'),
+    document.getElementById('p4box')
+];
+
 let playersScoreDisplay = [
     document.getElementById('p1score'),
     document.getElementById('p2score'),
@@ -63,6 +70,7 @@ function asignPointsAndRole(p) {
                 playersRoleDisplay[p].innerHTML = playersRole[p];
 
                 playedThisRound[p] = true;
+                playersBoxDisplay[p].style.transform = 'scale(0.8)';
                 updatePlayerColor(p);
             }
         break;
@@ -77,6 +85,7 @@ function asignPointsAndRole(p) {
                     ruinedPlayer = oldMagnate;
                     playersRoleDisplay[oldIndig].innerHTML = "-";
                     playersRole[oldMagnate] = "INDIG";
+                    playersBoxDisplay[oldMagnate].style.transform = 'scale(0.8)';
                     playersRoleDisplay[oldMagnate].innerHTML = playersRole[oldMagnate];
                     playersScoreDisplay[oldMagnate].style.color = '#707070';
                     playersRoleDisplay[oldMagnate].style.color = '#707070';
@@ -99,6 +108,7 @@ function asignPointsAndRole(p) {
                     updatePlayerColor(p);
                 }
                 playedThisRound[p] = true;
+                playersBoxDisplay[p].style.transform = 'scale(0.8)';
             }
         break;
     }
@@ -115,6 +125,10 @@ function nextRound() {
         nextRoundBtn.style.display = 'none';
         playersScoreDisplay.forEach((player, i) => {
             updatePlayerColor(i);
+        });
+
+        playersBoxDisplay.forEach(player => {
+            player.style.transform = 'scale(1.0)';
         });
     }else{
         roundDisplay.innerHTML = "PARTIDA TERMINADA!";
