@@ -46,3 +46,7 @@ h1 {
     padding: 10px;
     display:flex;
 }
+
+#nextroundbutton {
+    cursor: pointer;
+}

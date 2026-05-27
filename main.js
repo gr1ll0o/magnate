@@ -1,73 +1,78 @@
 /// HTML ELEMENTS ///
-let p1ScoreDisplay = document.getElementById('p1score');
-let p2ScoreDisplay = document.getElementById('p2score');
-let p3ScoreDisplay = document.getElementById('p3score');
-let p4ScoreDisplay = document.getElementById('p4score');
+let playersScoreDisplay = [
+    document.getElementById('p1score'),
+    document.getElementById('p2score'),
+    document.getElementById('p3score'),
+    document.getElementById('p4score')
+];
 
-let p1RoleDisplay = document.getElementById('p1role');
-let p2RoleDisplay = document.getElementById('p2role');
-let p3RoleDisplay = document.getElementById('p3role');
-let p4RoleDisplay = document.getElementById('p4role');
+let playersRoleDisplay = [
+    document.getElementById('p1role'),
+    document.getElementById('p2role'),
+    document.getElementById('p3role'),
+    document.getElementById('p4role')
+];
+
+let nextRoundBtn = document.getElementById('nextroundbutton');
 
 /// PLAYERS STATS ///
 // Players Score
-let p1Score = 0;
-let p2Score = 0;
-let p3Score = 0;
-let p4Score = 0;
+let playersScore = [0, 0, 0, 0];
 // Players Role
-let p1Role = '-';
-let p2Role = '-';
-let p3Role = '-';
-let p4Role = '-';
+let playersRole = ['-', '-', '-', '-'];
 // Rounds
 let round = 1;
 let roles = ["MAGNATE", "RICO", "POBRE", "INDIG"];
 let points = [30, 20, 10, 0];
 let nextRole = 0;
 
+/// FUNCTIONS ///
+function asignPointsAndRole(p) {
+    switch(round) {
+        case 1: /// RONDA 1 /// Solo se comprueba si aún no se asignó el rol
+            if (playersRole[p] == '-') {              
+                playersScore[p] += points[nextRole];
+                playersRole[p] = roles[nextRole];
+                nextRole++;
+                playersScoreDisplay[p].innerHTML = playersScore[p];
+                playersRoleDisplay[p].innerHTML = playersRole[p];
+            }
+        break;
+    }
+}
+
+function nextRound() {
+    round++;
+    nextRole = 0;
+    nextRoundBtn.style.display = 'none';
+}
+
 /// SCRIPT ///
 
-p1ScoreDisplay.addEventListener('click', () => {
-    if (p1Role == '-') {
-        p1Score += points[nextRole];
-        p1Role = roles[nextRole];
-        nextRole++;
+nextRoundBtn.style.display = 'none';
 
-        p1ScoreDisplay.innerHTML = p1Score;
-        p1RoleDisplay.innerHTML = p1Role;
-    }
+playersScoreDisplay[0].addEventListener('click', () => {
+    asignPointsAndRole(0);
+    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
 });
 
-p2ScoreDisplay.addEventListener('click', () => {
-    if (p2Role == '-') {
-        p2Score += points[nextRole];
-        p2Role = roles[nextRole];
-        nextRole++;
+playersScoreDisplay[1].addEventListener('click', () => {
+    asignPointsAndRole(1);
+    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
 
-        p2ScoreDisplay.innerHTML = p2Score;
-        p2RoleDisplay.innerHTML = p2Role;
-    }
 });
 
-p3ScoreDisplay.addEventListener('click', () => {
-    if (p3Role == '-') {
-        p3Score += points[nextRole];
-        p3Role = roles[nextRole];
-        nextRole++;
+playersScoreDisplay[2].addEventListener('click', () => {
+    asignPointsAndRole(2);
+    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
 
-        p3ScoreDisplay.innerHTML = p3Score;
-        p3RoleDisplay.innerHTML = p3Role;
-    }
 });
 
-p4ScoreDisplay.addEventListener('click', () => {
-    if (p4Role == '-') {
-        p4Score += points[nextRole];
-        p4Role = roles[nextRole];
-        nextRole++;
+playersScoreDisplay[3].addEventListener('click', () => {
+    asignPointsAndRole(3);
+    if (nextRole >= 4) nextRoundBtn.style.display = 'block';
+});
 
-        p4ScoreDisplay.innerHTML = p4Score;
-        p4RoleDisplay.innerHTML = p4Role;
-    }
+nextRoundBtn.addEventListener('click', () => {
+    nextRound();
 });
