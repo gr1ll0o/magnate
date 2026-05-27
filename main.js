@@ -16,6 +16,10 @@ let playersRoleDisplay = [
 let roundDisplay = document.getElementById('rounddisplay');
 let nextRoundBtn = document.getElementById('nextroundbutton');
 
+/// SOUNDS ///
+let effectAudio = document.getElementById('effect');
+let selectAudio = document.getElementById('select');
+
 /// PLAYERS STATS ///
 let playersScore = [0, 0, 0, 0];
 let playersRole = ['-', '-', '-', '-']; 
@@ -24,11 +28,31 @@ let ruin = false; // Ruin control
 let roles = ["MAGNATE", "RICO", "POBRE", "INDIG"];
 let points = [30, 20, 10, 0];
 let playedThisRound = [false, false, false, false];
+let ruinedPlayer = -1;
+let oldMagnate;
+let oldIndig;
 let nextRole = 0; // Next role according to roles array
 
 /// FUNCTIONS ///
+function updatePlayerColor(p) {
+    // Reset default
+    playersScoreDisplay[p].style.color = '#fff';
+    playersRoleDisplay[p].style.color = '#fff';
+    // Magnate
+    if (playersRole[p] == "MAGNATE") {
+        playersScoreDisplay[p].style.color = '#ff0';
+        playersRoleDisplay[p].style.color = '#ff0';
+    }
+    if (p == ruinedPlayer) {
+        playersScoreDisplay[p].style.color = '#707070';
+        playersRoleDisplay[p].style.color = '#707070';
+    }
+}
+
 function asignPointsAndRole(p) {
-    let oldMagnate;
+    if (nextRole == 0) {
+        effectAudio.play();
+    }
     switch(round) {
         case 1: /// RONDA 1 ///
             if (!playedThisRound[p]) {              
@@ -39,17 +63,23 @@ function asignPointsAndRole(p) {
                 playersRoleDisplay[p].innerHTML = playersRole[p];
 
                 playedThisRound[p] = true;
+                updatePlayerColor(p);
             }
         break;
 
         case 2: case 3: /// RONDA 2 Y 3 ///
             oldMagnate = playersRole.indexOf("MAGNATE");
+            oldIndig = playersRole.indexOf("INDIG");
             if (!playedThisRound[p]) {              
                 if (playersRole[p] != "MAGNATE" && nextRole == 0) {
                     // BANCARROTA
                     ruin = true;
+                    ruinedPlayer = oldMagnate;
+                    playersRoleDisplay[oldIndig].innerHTML = "-";
                     playersRole[oldMagnate] = "INDIG";
                     playersRoleDisplay[oldMagnate].innerHTML = playersRole[oldMagnate];
+                    playersScoreDisplay[oldMagnate].style.color = '#707070';
+                    playersRoleDisplay[oldMagnate].style.color = '#707070';
                     playedThisRound[oldMagnate] = true;
 
                     // NEW MAGNATE
@@ -59,12 +89,14 @@ function asignPointsAndRole(p) {
                     playersScoreDisplay[p].innerHTML = playersScore[p];
                     playedThisRound[p] = true;
                     nextRole = 1;
+                    updatePlayerColor(p);
                 }else{
                     playersRole[p] = roles[nextRole];
                     playersScore[p] += points[nextRole];
                     playersRoleDisplay[p].innerHTML = playersRole[p];
                     playersScoreDisplay[p].innerHTML = playersScore[p];
                     nextRole++;
+                    updatePlayerColor(p);
                 }
                 playedThisRound[p] = true;
             }
@@ -77,9 +109,13 @@ function nextRound() {
         round++;
         nextRole = 0;
         ruin = false;
+        ruinedPlayer = -1;
         playedThisRound = [false, false, false, false];
         roundDisplay.innerHTML = "RONDA " + round + "/3";
         nextRoundBtn.style.display = 'none';
+        playersScoreDisplay.forEach((player, i) => {
+            updatePlayerColor(i);
+        });
     }else{
         roundDisplay.innerHTML = "PARTIDA TERMINADA!";
     }
@@ -92,9 +128,11 @@ playersScoreDisplay.forEach((player, i) => {
         if ((nextRole >= 3 && ruin) || (nextRole >= 4 && !ruin)) {
             nextRoundBtn.style.display = 'block';
         }
+        selectAudio.play();
     });
 });
 
 nextRoundBtn.addEventListener('click', () => {
     nextRound();
+    selectAudio.play();
 });

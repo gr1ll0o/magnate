@@ -10,6 +10,8 @@
     padding: 0;
     color: #fff;
     font-family: 'Earwig';
+    transition: all ease 0.2s;
+    user-select: none;
 }
 
 p {
@@ -38,6 +40,14 @@ h1 {
     cursor: pointer;
 }
 
+.scoredisplay:hover {
+    transform: scale(1.1);
+}
+
+.scoredisplay:active {
+    transform: scale(0.85);
+}
+
 .playerole {
     font-size: 20px;
 }
@@ -50,4 +60,13 @@ h1 {
 #nextroundbutton {
     display: none;
     cursor: pointer;
+}
+
+#nextroundbutton:active {
+    transform: scale(0.85);
+}
+
+#music {
+    width: 100px;
+    height: 20px;
 }
